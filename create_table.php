@@ -18,7 +18,7 @@ mail varchar(20),
 dep varchar(20)
 )";
 
-if ($conn->query($sql) === TRUE) {
+if ($con->query($sql) === TRUE) {
     echo "Table MyGuests created successfully";
   } else {
     echo "Error creating table: " . $conn->error;
