@@ -1,14 +1,14 @@
 <?php
 $servername="localhost";
-$username="username";
-$password="password";
+$username="root";
+$password="";
 
-$conn= new mysqli($servername,$username,$password);
+$con= new mysqli($servername,$username,$password);
 
-if (!$conn) {
+if (!$con) {
     die("Connection failed: " . mysqli_connect_errno());
 }
 
-echo "Connected successfully";
+echo "Connected successfully settle.";
 
 ?>
