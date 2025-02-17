@@ -6,6 +6,16 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
+// Predefined queries for the university database
+$queries = [
+    "Show all students" => "SELECT * FROM student",
+    "Show all courses" => "SELECT * FROM course",
+    "Show all departments" => "SELECT * FROM department",
+    "Show student count" => "SELECT COUNT(*) AS total_students FROM student",
+    "Show course count" => "SELECT COUNT(*) AS total_courses FROM course"
+];
+
+
 // Handling query execution
 $query_result = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['query'])) {
@@ -46,25 +56,50 @@ $conn->close();
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>SQL Query Runner</title>
+	<script>
+		function runQuery(query) {
+			document.getElementById('queryInput').value = query;
+			document.getElementById('queryForm').submit();
+		}
+
+		function toggleOutput() {
+			let outputDiv = document.getElementById('output');
+			if (outputDiv.style.display === 'none') {
+				outputDiv.style.display = 'block';
+			} else {
+				outputDiv.style.display = 'none';
+			}
+		}
+	</script>
 </head>
 
 <body>
 	<h2>Welcome,
 		<?php echo $_SESSION['user']; ?>!
 	</h2>
-
 	<h2>SQL Query Runner</h2>
-	<form method="post">
-		<textarea name="query" rows="5" cols="50" placeholder="Enter your SQL query here..."></textarea><br>
+
+	<h3>Available Queries:</h3>
+	<ul>
+		<?php foreach ($queries as $desc => $sql): ?>
+		<li><a href="#"
+				onclick="runQuery('<?php echo addslashes($sql); ?>')"><?php echo $desc; ?></a>
+		</li>
+		<?php endforeach; ?>
+	</ul>
+
+	<form id="queryForm" method="post">
+		<textarea id="queryInput" name="query" rows="5" cols="50"
+			placeholder="Enter your SQL query here..."></textarea><br>
 		<button type="submit">Run Query</button>
 	</form>
 
 	<a href="logout.php">Logout</a>
-	<h3>Output:</h3>
 
-	<div><?php echo $query_result; ?></div>
-
-
+	<h3>Output: <button onclick="toggleOutput()">Show/Hide</button></h3>
+	<div id="output" style="display: block;">
+		<?php echo $query_result; ?>
+	</div>
 </body>
 
 </html>
