@@ -6,15 +6,18 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 
-// Predefined queries for the university database
+// Predefined queries for the university database with numbering
 $queries = [
-    "Show all students" => "SELECT * FROM student",
-    "Show all courses" => "SELECT * FROM course",
-    "Show all departments" => "SELECT * FROM department",
-    "Show student count" => "SELECT COUNT(*) AS total_students FROM student",
-    "Show course count" => "SELECT COUNT(*) AS total_courses FROM course"
+    "SELECT * FROM student" => "SELECT * FROM student",
+    "SELECT * FROM course" => "SELECT * FROM course",
+    "SELECT * FROM department" => "SELECT * FROM department",
+    "SELECT COUNT(*) AS total_students FROM student" => "SELECT COUNT(*) AS total_students FROM student",
+	"SELECT COUNT(*) AS total_courses FROM course" => "SELECT COUNT(*) AS total_courses FROM course",
+	"SELECT name FROM instructor" => "SELECT name FROM instructor",
+	"SELECT AVG(salary) FROM instructor" => "SELECT AVG(salary) FROM instructor",
+	"SELECT AVG(salary) FROM instructor WHERE dept_name='Comp.Sci.'" => "SELECT AVG(salary) FROM instructor WHERE dept_name='Comp.Sci.'",
+	
 ];
-
 
 // Handling query execution
 $query_result = '';
@@ -46,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['query'])) {
     }
 }
 $conn->close();
-
 ?>
 
 <!DOCTYPE html>
@@ -75,18 +77,24 @@ $conn->close();
 
 <body>
 	<h2>Welcome,
-		<?php echo $_SESSION['user']; ?>!
-	</h2>
+		<?php echo $_SESSION['user']; ?>!</h2>
 	<h2>SQL Query Runner</h2>
 
 	<h3>Available Queries:</h3>
-	<ul>
-		<?php foreach ($queries as $desc => $sql): ?>
-		<li><a href="#"
-				onclick="runQuery('<?php echo addslashes($sql); ?>')"><?php echo $desc; ?></a>
+	<ol>
+		<?php
+        // $count = 1;
+foreach ($queries as $desc => $sql): ?>
+		<li>
+			<a href="#"
+				onclick="runQuery('<?php echo addslashes($sql); ?>')">
+				<?php echo  " " . $desc; ?>
+			</a>
 		</li>
-		<?php endforeach; ?>
-	</ul>
+		<?php
+// $count++;
+endforeach; ?>
+	</ol>
 
 	<form id="queryForm" method="post">
 		<textarea id="queryInput" name="query" rows="5" cols="50"
